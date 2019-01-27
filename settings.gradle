@@ -9,4 +9,5 @@
 
 rootProject.name = 'SAKOD_labs'
 
+include 'root_app'
 include 'lab_1'

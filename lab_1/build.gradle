@@ -1,7 +1,13 @@
 plugins {
     id 'java-library'
+    id 'java'
 }
 
 dependencies {
     testImplementation 'junit:junit:4.12'
+}
+
+javadoc {
+    source = sourceSets.main.allJava
+    classpath = configurations.compile
 }
