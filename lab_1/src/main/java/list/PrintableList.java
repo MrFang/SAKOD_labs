@@ -80,8 +80,9 @@ public class PrintableList<E> implements List<E> {
     @Override
     public Object[] toArray() {
         Object[] result = new Object[size];
-        int i = 0;
 
+        /// Перебор всех элементов списка, добавление их в массив
+        int i = 0;
         for (E item : this) {
             result[i++] = item;
         }
@@ -119,6 +120,7 @@ public class PrintableList<E> implements List<E> {
     @Override
     public boolean addAll(Collection<? extends E> c) {
 
+        /// Проходим по всем элементам в коллекции и добавляем каждый в список
         for(E item : c) {
             linkLast(item);
         }
@@ -135,17 +137,20 @@ public class PrintableList<E> implements List<E> {
      */
     @Override
     public boolean addAll(int index, Collection<? extends E> c) {
-        if (!isIndexValid(index)) {
+        /// Проверка валидности индекса
+        if (!isIndexValid(index) && !isEmpty()) {
             throw new IndexOutOfBoundsException();
         }
 
         final PrintableListNode<E> targetNode = node(index);
 
+        /// Добавляем в конец?
         if (targetNode == last) {
             addAll(c);
         }
         else {
 
+            /// Проходим по всем элементам в коллекции, добавляем их после целевого
             for (E item : c) {
                 linkBefore(targetNode.next, item);
             }
@@ -160,6 +165,8 @@ public class PrintableList<E> implements List<E> {
      */
     @Override
     public void clear() {
+
+        /// Проходим по всем элементам списка и обнуляем указатели
         for (PrintableListNode<E> x = first; x != null; ) {
             PrintableListNode<E> next = x.next;
             x.item = null;
@@ -167,6 +174,7 @@ public class PrintableList<E> implements List<E> {
             x.prev = null;
             x = next;
         }
+
         first = last = null;
         size = 0;
     }
@@ -180,7 +188,8 @@ public class PrintableList<E> implements List<E> {
     @Override
     public E get(int index) {
 
-        if (!isIndexValid(index)) {
+        /// Проверяем валидность индекса
+        if (!isIndexValid(index) && !isEmpty()) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -196,9 +205,12 @@ public class PrintableList<E> implements List<E> {
      */
     @Override
     public E set(int index, E element) {
-        if (!isIndexValid(index)) {
+
+        /// Проверяем валидность индекса
+        if (!isIndexValid(index) && !isEmpty()) {
             throw new IndexOutOfBoundsException();
         }
+
         PrintableListNode<E> targetNode = node(index);
         E oldValue = targetNode.item;
         targetNode.item = element;
@@ -215,15 +227,17 @@ public class PrintableList<E> implements List<E> {
     @Override
     public void add(int index, E element) {
 
-        if (!isIndexValid(index)) {
+        /// Проверяем валидность индекса
+        if (!isIndexValid(index) && !isEmpty()) {
             throw new IndexOutOfBoundsException();
         }
 
+        /// Добавляем в конец?
         if (index == size-1) {
             add(element);
+        } else {
+            linkBefore(node(index).next, element);
         }
-
-        linkBefore(node(index).next, element);
     }
 
     /**
@@ -235,7 +249,8 @@ public class PrintableList<E> implements List<E> {
     @Override
     public E remove(int index) {
 
-        if (!isIndexValid(index)){
+        /// Проверяем валидность индекса
+        if (!isIndexValid(index) && !isEmpty()){
             throw new IndexOutOfBoundsException();
         }
 
@@ -256,6 +271,7 @@ public class PrintableList<E> implements List<E> {
     public int indexOf(Object o) {
         int index = 0;
 
+        /// Ищем пустой объект?
         if (o == null) {
             for (PrintableListNode<E> x = first; x != null; x = x.next) {
                 if (x.item == null)
@@ -283,6 +299,7 @@ public class PrintableList<E> implements List<E> {
     public int lastIndexOf(Object o) {
         int index = size;
 
+        /// Ищем пустой элемент?
         if (o == null) {
             for (PrintableListNode<E> x = last; x != null; x = x.prev) {
                 index--;
@@ -319,9 +336,11 @@ public class PrintableList<E> implements List<E> {
     @Override
     public ListIterator<E> listIterator(int index) {
 
-        if(!isIndexValid(index)) {
+        /// Проверяем валидность индекса
+        if(!isIndexValid(index) && !isEmpty()) {
             throw new IndexOutOfBoundsException();
         }
+
         return new Itr(index);
     }
 
@@ -335,11 +354,14 @@ public class PrintableList<E> implements List<E> {
     @Override
     public List<E> subList(int fromIndex, int toIndex) {
 
-        if (!isIndexValid(fromIndex) || !isIndexValid(toIndex)) {
+        /// Проверяем валидность индекса
+        if (!isIndexValid(fromIndex) || !isIndexValid(toIndex) && !isEmpty()) {
             throw new IndexOutOfBoundsException();
         }
+
         PrintableList<E> result = new PrintableList<E>();
 
+        /// Проходим по списку и формируем подсписок
         for(int i = fromIndex; i < toIndex; ++i) {
             result.add(node(i).item);
         }
@@ -358,8 +380,10 @@ public class PrintableList<E> implements List<E> {
         boolean modified = false;
         Iterator<E> it = iterator();
 
+        /// Проходим по списку с помощью итератора
         while (it.hasNext()) {
 
+            /// Коллекция содержит текущий элемент?
             if (!c.contains(it.next())) {
                 it.remove();
                 modified = true;
@@ -381,8 +405,10 @@ public class PrintableList<E> implements List<E> {
         boolean modified = false;
         Iterator<E> it = iterator();
 
+        /// Проходим по списку с помощью итератора
         while (it.hasNext()) {
 
+            /// Коллекция содержит текущий элемент?
             if (c.contains(it.next())) {
                 it.remove();
                 modified = true;
@@ -401,8 +427,10 @@ public class PrintableList<E> implements List<E> {
     @Override
     public boolean containsAll(Collection c) {
 
+        /// Проходим по коллекции
         for (Object e : c) {
 
+            /// Проверка наличия текущего элемента в списке
             if (!contains(e)) {
                 return false;
             }
@@ -422,17 +450,21 @@ public class PrintableList<E> implements List<E> {
      */
     @Override
     public <T> T[] toArray(T[] a) {
+        /// Если целевой массив меньше списка, расширяем и копируем значения
         if (a.length < size) {
             a = (T[]) java.lang.reflect.Array.newInstance(
                     a.getClass().getComponentType(), size);
         }
+
         int i = 0;
         Object[] result = a;
 
+        /// Проходим по всем объектам в списке и добавляем в массив
         for (PrintableListNode x = first; x != null; x = x.next) {
             result[i++] = x.item;
         }
 
+        /// Если массив длиннее чем список, устанавливаем признак конца списка
         if (a.length > size) {
             a[size] = null;
         }
@@ -448,6 +480,7 @@ public class PrintableList<E> implements List<E> {
     public String toString() {
         String result = new String();
 
+        /// Проходим по всем элементам, и формируем строку-результат
         for (E item: this) {
             result += item.toString() + "\n";
         }
@@ -461,7 +494,7 @@ public class PrintableList<E> implements List<E> {
      * @return возвращает true, если индекс лежит внутри списка
      */
     private boolean isIndexValid(int index) {
-        return index >= 0 && index < size;
+        return (index >= 0 && index < size);
     }
 
     /**
@@ -471,12 +504,15 @@ public class PrintableList<E> implements List<E> {
      * @return возвращает элемент списка по индексу
      */
     private PrintableListNode<E> node(int index) {
+
+        /// Проверяем с какого конца списка ближе до элемента
         if (index < (size >> 1)) {
             PrintableListNode<E> x = first;
             for (int i = 0; i < index; i++)
                 x = x.next;
             return x;
-        } else {
+        }
+        else {
             PrintableListNode<E> x = last;
             for (int i = size - 1; i > index; i--)
                 x = x.prev;
@@ -493,6 +529,7 @@ public class PrintableList<E> implements List<E> {
         final PrintableListNode<E> newNode = new PrintableListNode<E>(l, item, null);
         last = newNode;
 
+        /// Проверяем были ли до добавления элементы в списке
         if (l == null) {
             first = newNode;
         }
@@ -513,6 +550,7 @@ public class PrintableList<E> implements List<E> {
         final PrintableListNode<E> newNode = new PrintableListNode<E>(prev, item, node);
         node.prev = newNode;
 
+        /// Добавляем в начало?
         if (prev == null) {
             first = newNode;
         }
@@ -528,11 +566,13 @@ public class PrintableList<E> implements List<E> {
      * Отсоединяет указанный элемент
      * @param node -- элемент для отсоединения
      */
-    private void unlink (PrintableListNode<E> node) {
+    private E unlink (PrintableListNode<E> node) {
+        final E element = node.item;
         final PrintableListNode<E> next = node.next;
         final PrintableListNode<E> prev = node.prev;
 
-        if (node == first) {
+        // Удаляем первый?
+        if (prev == null) {
             first = next;
         }
         else {
@@ -540,8 +580,9 @@ public class PrintableList<E> implements List<E> {
             node.prev = null;
         }
 
-        if (node == last) {
-            last = next;
+        // Удаляем последний?
+        if (next == null) {
+            last = prev;
         }
         else {
             next.prev = prev;
@@ -550,6 +591,7 @@ public class PrintableList<E> implements List<E> {
 
         node.item = null;
         size--;
+        return element;
     }
 
 
@@ -601,7 +643,8 @@ public class PrintableList<E> implements List<E> {
          */
         Itr(int start) {
 
-            if (!isIndexValid(start)) {
+            /// Проверяем валидность индеккса
+            if (!isIndexValid(start) && !isEmpty()) {
                 throw new IndexOutOfBoundsException();
             }
 
@@ -626,6 +669,7 @@ public class PrintableList<E> implements List<E> {
         @Override
         public E next() {
 
+            /// Проверяем наличие следующего
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
@@ -653,6 +697,7 @@ public class PrintableList<E> implements List<E> {
         @Override
         public E previous() {
 
+            /// Проверяем наличие предыдущего
             if (!hasPrevious()) {
                 throw new NoSuchElementException();
             }
@@ -688,10 +733,12 @@ public class PrintableList<E> implements List<E> {
         @Override
         public void remove() {
 
+            /// Знаем, что удалять?
             if (lastReturnedNode == null) {
                 throw new IllegalStateException();
             }
 
+            /// Если итератор указывал на текущий
             if (nextNode == lastReturnedNode) {
                 nextNode = lastReturnedNode.next;
             }
@@ -711,6 +758,7 @@ public class PrintableList<E> implements List<E> {
         @Override
         public void set(E e) {
 
+            /// Знаем, что изменять?
             if (lastReturnedNode == null) {
                 throw new IllegalStateException();
             }
@@ -728,6 +776,7 @@ public class PrintableList<E> implements List<E> {
 
             lastReturnedNode = null;
 
+            /// Добавляем в конец?
             if (nextNode == null) {
                 linkLast(e);
             }
