@@ -1,43 +1,44 @@
 package list;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 
-public class PrintableListTest {
+
+class PrintableListTest {
     private List<String> list = new PrintableList<String>();
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         list.add("Вася");
         list.add("Коля");
         list.add("Петя");
     }
 
     @Test
-    public void sizeTest() {
+    void sizeTest() {
         assertEquals(list.size(), 3);
     }
 
     @Test
-    public void isEmptyTest() {
+    void isEmptyTest() {
         assertFalse(list.isEmpty());
     }
 
     @Test
-    public void containsTest() {
+    void containsTest() {
         assertTrue(list.contains("Вася"));
         assertFalse(list.contains("Саша"));
     }
 
     @Test
-    public void foeEachTest() {
+    void foeEachTest() {
         String str = "";
 
         for(String s : list) {
@@ -48,7 +49,7 @@ public class PrintableListTest {
     }
 
     @Test
-    public void addAllTest() {
+    void addAllTest() {
         ArrayList<String> a = new ArrayList<String>();
         a.add("Маша");
         a.add("Катя");
@@ -60,7 +61,7 @@ public class PrintableListTest {
     }
 
     @Test
-    public void removeTest() {
+    void removeTest() {
         list.remove("Вася");
 
         assertFalse(list.contains("Вася"));
