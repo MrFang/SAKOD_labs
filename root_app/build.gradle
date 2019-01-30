@@ -8,4 +8,9 @@ dependencies {
     compile project(':lab_1')
 }
 
+jar {
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    manifest { attributes 'Main-Class': 'App' }
+}
+
 mainClassName = 'App'
