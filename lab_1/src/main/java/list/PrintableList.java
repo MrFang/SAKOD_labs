@@ -495,7 +495,8 @@ public class PrintableList<E> implements List<E> {
     @Override
     public void sort(Comparator<? super E> c) {
 
-        if (size > 2) {
+        /// Если больше 1 элемента, разбить на два и отсортировать
+        if (size > 1) {
             PrintableList<E> first = this.subList(0, size >> 1);
             PrintableList<E> second = this.subList(size >> 1, size);
             first.sort(c); second.sort(c);
@@ -517,10 +518,13 @@ public class PrintableList<E> implements List<E> {
         int firstListIndex = 0;
         int secondListIndex = 0;
 
+        /// Проходим по спискам до тех пор пока один из них закончится
         while (firstListIndex < first.size() && secondListIndex < second.size()) {
             final E e1 = first.get(firstListIndex);
             final E e2 = second.get(secondListIndex);
 
+            /// Если элемент первого списка меньше добавляем его и смещаем указатель
+            /// Иначе то же для второго списка
             if (c.compare(e1, e2) < 0) {
                 result.add(e1);
                 ++firstListIndex;
@@ -531,10 +535,12 @@ public class PrintableList<E> implements List<E> {
             }
         }
 
+        /// Если в первом списке остались элеметы, добавляем их в конец
         while (firstListIndex < first.size()) {
             result.add(first.get(firstListIndex++));
         }
 
+        /// Если во втором списке остались элементы, добавляем их в конец
         while (secondListIndex < second.size()) {
             result.add(second.get(secondListIndex++));
         }
