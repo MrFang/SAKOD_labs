@@ -1,7 +1,8 @@
-import list.PrintableList;
-
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+
+import list.PrintableList;
 
 public class App {
     static List<Integer> list = new PrintableList<Integer>();
@@ -17,6 +18,7 @@ public class App {
             System.out.println("1 -- Add element");
             System.out.println("2 -- Remove element");
             System.out.println("3 -- Print list");
+            System.out.println("4 -- Sort list");
 
             answer = input.nextInt();
 
@@ -30,6 +32,8 @@ public class App {
                 case 3:
                     printList();
                     break;
+                case 4:
+                    sortList();
             }
 
         } while (answer != 0);
@@ -52,16 +56,21 @@ public class App {
             case 0:
                 return;
             case 1:
+                System.out.println("Type value");
                 list.remove((Integer)input.nextInt());
                 break;
             case 2:
+                System.out.println("Type index (" + 0 + "-" + (list.size()-1) + ")");
                 list.remove(input.nextInt());
                 break;
-            default: return;
         }
     }
 
     static void printList() {
         System.out.println(list);
+    }
+
+    static void sortList() {
+        list.sort(Comparator.comparingInt(o -> o));
     }
 }

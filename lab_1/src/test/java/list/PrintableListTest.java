@@ -39,13 +39,13 @@ class PrintableListTest {
 
     @Test
     void foeEachTest() {
-        String str = "";
 
+        StringBuilder str = new StringBuilder();
         for(String s : list) {
-            str+=s;
+            str.append(s);
         }
 
-        assertEquals("ВасяКоляПетя", str);
+        assertEquals("ВасяКоляПетя", str.toString());
     }
 
     @Test

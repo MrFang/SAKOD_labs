@@ -352,10 +352,10 @@ public class PrintableList<E> implements List<E> {
      * @throws IndexOutOfBoundsException если хотя бы один из индексов за пределами списка
      */
     @Override
-    public List<E> subList(int fromIndex, int toIndex) {
+    public PrintableList<E> subList(int fromIndex, int toIndex) {
 
         /// Проверяем валидность индекса
-        if (!isIndexValid(fromIndex) || !isIndexValid(toIndex) && !isEmpty()) {
+        if (!isIndexValid(fromIndex) || !isIndexValid(toIndex-1) && !isEmpty()) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -483,6 +483,60 @@ public class PrintableList<E> implements List<E> {
         /// Проходим по всем элементам, и формируем строку-результат
         for (E item: this) {
             result += item.toString() + "\n";
+        }
+
+        return result;
+    }
+
+    /**
+     * Сортирует текущий список в соответствии с заданным компаратором
+     * @param c -- компаратор, определяющий способ сортировки
+     */
+    @Override
+    public void sort(Comparator<? super E> c) {
+
+        if (size > 2) {
+            PrintableList<E> first = this.subList(0, size >> 1);
+            PrintableList<E> second = this.subList(size >> 1, size);
+            first.sort(c); second.sort(c);
+            this.clear();
+            this.addAll(merge(first, second, c));
+        }
+    }
+
+    /**
+     * Выполняет слияние двух отсортированных списков в один
+     * @param first -- первый список
+     * @param second -- второй список
+     * @param c -- компаратор, определяющий порядок сортировки
+     * @return возвращает один отсортированный список
+     */
+    private PrintableList<E> merge(PrintableList<E> first, PrintableList<E> second, Comparator<? super E> c) {
+        PrintableList<E> result = new PrintableList<E>();
+
+        int firstListIndex = 0;
+        int secondListIndex = 0;
+
+        while (firstListIndex < first.size() && secondListIndex < second.size()) {
+            final E e1 = first.get(firstListIndex);
+            final E e2 = second.get(secondListIndex);
+
+            if (c.compare(e1, e2) < 0) {
+                result.add(e1);
+                ++firstListIndex;
+            }
+            else {
+                result.add(e2);
+                ++secondListIndex;
+            }
+        }
+
+        while (firstListIndex < first.size()) {
+            result.add(first.get(firstListIndex++));
+        }
+
+        while (secondListIndex < second.size()) {
+            result.add(second.get(secondListIndex++));
         }
 
         return result;
