@@ -506,6 +506,99 @@ public class PrintableList<E> implements List<E> {
     }
 
     /**
+     * Метод ищет k-ю порядковую статистику
+     * @param k -- индекс порядковой статистики (1<=k<=size)
+     * @param c -- компаратор, определяющий способ сравнения элементов
+     * @return возвращает значение k-ого по порядку объекта
+     * @throws IndexOutOfBoundsException если k не является индексом текущего списка
+     */
+    public E findOrderStatistic (int k, Comparator<? super E> c) {
+
+        /// Проверяем валидность индекса статистики
+        if (!isIndexValid(k-1)) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        final PrintableList<E> tmp = this.subList(0, size);
+        int left = 0, right = this.size-1;
+
+        /// Повторять до нахождения статистики
+        while (true) {
+            int mid = partition(left, right, c, tmp);
+
+            /// Индекс опорного равен искомому?
+            if (mid == k+left-1) {
+                return tmp.get(mid);
+            }
+            /// Больше искомого?
+            else if (k+left-1 < mid) {
+                right = mid;
+            }
+            /// Меньше?
+            else {
+                k -= mid-left + 1;
+                left = mid + 1;
+            }
+        }
+    }
+
+    /**
+     * Разбивает заданный список при помощи медианного элемента на две части
+     * В начале элементы меньше медианы, в конце -- больше
+     * @param left -- левый край списка
+     * @param right -- правый край списка
+     * @param c -- компаратор, определяющий способ сравнения элементов
+     * @param list -- список для разбиения
+     * @return Возвращает индекс медианного элемента
+     */
+    private int partition(int left, int right, Comparator<? super E> c, PrintableList<E> list) {
+
+        int l = left, r = right;
+        final E mid = list.get(l);
+
+        /// Пока есть что менять
+        while (l < r) {
+
+            /// Элемент на своём месте?
+            while (c.compare(list.get(l), mid) < 0) {
+                ++l;
+            }
+
+            /// Элемент на своём месте
+            while (c.compare(list.get(r), mid) > 0) {
+                --r;
+            }
+
+            /// Нужно менять?
+            if (l < r) {
+                list.swap(list.node(l++), list.node(r--));
+            }
+        }
+
+        return r;
+
+    }
+
+    /**
+     * Меняет два элемента списка местами
+     * @param first -- первый элемент
+     * @param second -- второй элемент
+     */
+    private void swap(PrintableListNode<E> first, PrintableListNode<E> second) {
+
+        /// Меняем элемент сам с собой?
+        if (first == second) {
+            return;
+        }
+
+        E tmp = first.item;
+        linkBefore(first, second.item);
+        unlink(first);
+        linkBefore(second, tmp);
+        unlink(second);
+    }
+
+    /**
      * Выполняет слияние двух отсортированных списков в один
      * @param first -- первый список
      * @param second -- второй список

@@ -1,11 +1,9 @@
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import list.PrintableList;
 
 public class App {
-    static List<Integer> list = new PrintableList<Integer>();
+    static PrintableList<Integer> list = new PrintableList<Integer>();
     static Scanner input = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -19,6 +17,7 @@ public class App {
             System.out.println("2 -- Remove element");
             System.out.println("3 -- Print list");
             System.out.println("4 -- Sort list");
+            System.out.println("5 -- Find order statistic");
 
             answer = input.nextInt();
 
@@ -34,6 +33,10 @@ public class App {
                     break;
                 case 4:
                     sortList();
+                    break;
+                case 5:
+                    findOrderStatistic();
+                    break;
             }
 
         } while (answer != 0);
@@ -72,5 +75,11 @@ public class App {
 
     static void sortList() {
         list.sort(Comparator.comparingInt(o -> o));
+    }
+
+    static void findOrderStatistic() {
+        System.out.println("Type k-th order statistic");
+        int order = input.nextInt();
+        System.out.println(list.findOrderStatistic(order, Comparator.comparingInt(o -> o)));
     }
 }
