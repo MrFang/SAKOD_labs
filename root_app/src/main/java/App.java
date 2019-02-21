@@ -5,6 +5,7 @@ import list.PrintableList;
 public class App {
     static PrintableList<Integer> list = new PrintableList<Integer>();
     static Scanner input = new Scanner(System.in);
+    static Comparator<Integer> defaultComparator = Comparator.comparingInt(o -> o);
 
     public static void main(String[] args) {
         int answer;
@@ -18,6 +19,7 @@ public class App {
             System.out.println("3 -- Print list");
             System.out.println("4 -- Sort list");
             System.out.println("5 -- Find order statistic");
+            System.out.println("6 -- Sort and find element");
 
             answer = input.nextInt();
 
@@ -36,6 +38,9 @@ public class App {
                     break;
                 case 5:
                     findOrderStatistic();
+                    break;
+                case 6:
+                    find();
                     break;
             }
 
@@ -74,12 +79,19 @@ public class App {
     }
 
     static void sortList() {
-        list.sort(Comparator.comparingInt(o -> o));
+        list.sort(defaultComparator);
     }
 
     static void findOrderStatistic() {
         System.out.println("Type k-th order statistic");
         int order = input.nextInt();
-        System.out.println(list.findOrderStatistic(order, Comparator.comparingInt(o -> o)));
+        System.out.println(list.findOrderStatistic(order, defaultComparator));
+    }
+
+    static void find() {
+        list.sort(defaultComparator);
+        System.out.println("Type value to find");
+        int e = input.nextInt();
+        System.out.println(list.find(e, defaultComparator));
     }
 }
