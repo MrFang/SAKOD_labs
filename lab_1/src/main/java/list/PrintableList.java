@@ -564,7 +564,7 @@ public class PrintableList<E> implements List<E> {
                 ++l;
             }
 
-            /// Элемент на своём месте
+            /// Элемент на своём месте?
             while (c.compare(list.get(r), mid) > 0) {
                 --r;
             }
