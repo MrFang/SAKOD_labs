@@ -6,6 +6,7 @@ plugins {
 dependencies {
     testImplementation 'junit:junit:4.12'
     compile project(':lab_1')
+    compile project(':lab_5')
 }
 
 jar {
